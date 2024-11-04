@@ -1,7 +1,7 @@
 # client.py
 import socket
 
-server_address = '127.0.0.1'  # Replace with server's IP
+server_address = input("Enter the server IP address: ")
 port_no = 33000
 MSSGLEN = 1024
 
