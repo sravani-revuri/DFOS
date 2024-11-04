@@ -2,6 +2,7 @@ import socket
 import threading
 import sys
 import csv
+from funtionalities import ls
 
 port_no=33000         #port number on server where connection occurs
 MSSGLEN=1024
@@ -42,6 +43,24 @@ def handle_client(client_socket,client_addr):
         else:
             client_socket.send("AUTHENTICATION FAILED".encode())
             print(f"Failed authentication for user {resp[0]} from {client_addr}")
+            return
+        while True:
+            menu = "\nChoose an option:\n1. List files\n2. Quit\n"
+            client_socket.send(menu.encode())
+
+            choice = client_socket.recv(MSSGLEN).decode().strip()
+
+            if choice == '1':
+                files = ls(resp[0])
+                for val in files:
+                    client_socket.send((val).encode())
+
+            elif choice == '2':
+                client_socket.send("Goodbye!".encode())
+                break
+
+            else:
+                client_socket.send("Invalid option. Try again.".encode())
     finally:
         client_socket.close()
 

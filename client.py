@@ -1,26 +1,35 @@
+# client.py
 import socket
 
-def main():
-    server_address = input("Enter server IP address ")  
-    port_no = 33000  
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_address = '127.0.0.1'  # Replace with server's IP
+port_no = 33000
+MSSGLEN = 1024
 
-    try:
-        client_socket.connect((server_address, port_no))
-        print("Connected to server at {}:{}".format(server_address, port_no))
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
+    client_socket.connect((server_address, port_no))
+    # Authenticate
+    username = input("Username: ")
+    password = input("Password: ")
+    client_socket.send(f"{username}:{password}".encode())
+    auth_response = client_socket.recv(MSSGLEN).decode()
+    print(auth_response)
 
-        username = input("Enter username: ")
-        password = input("Enter password: ")
+    if "SUCCESSFUL" in auth_response:
+        while True:
+            menu = client_socket.recv(MSSGLEN).decode()
+            print(menu)
 
-        credentials = f"{username}:{password}"
-        client_socket.send(credentials.encode())
-        resp = client_socket.recv(1024).decode()
-        print("Server response:", resp)
+            choice = input("Enter your choice: ")
+            client_socket.send(choice.encode())
 
-    except Exception as e:
-        print("An error occurred:", str(e))
-    finally:
-        client_socket.close()
+            if choice == '1':
+                response = client_socket.recv(MSSGLEN).decode()
+                if response=="finished":
+                    break
+                print(response)
 
-if __name__ == "__main__":
-    main()
+            elif choice == '2':
+                response = client_socket.recv(MSSGLEN).decode()
+                print(response)
+                print("Exiting.")
+                break
