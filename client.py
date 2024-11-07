@@ -27,8 +27,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
                 if response=="finished":
                     break
                 print(response)
-
-            elif choice == '2':
+            elif choice =='4':
+                filename= input("Enter file name to delete: ")
+                client_socket.send(filename.encode())
+                response = client_socket.recv(MSSGLEN).decode()
+                print(response)
+            elif choice == '5':
                 response = client_socket.recv(MSSGLEN).decode()
                 print(response)
                 print("Exiting.")
