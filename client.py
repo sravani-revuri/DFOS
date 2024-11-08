@@ -1,3 +1,6 @@
+
+
+
 # client.py
 import socket
 
@@ -27,8 +30,27 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
                 if response=="finished":
                     break
                 print(response)
-
-            elif choice == '2':
+            elif choice=='3':
+                filename=input("Enter file name to download:")
+                client_socket.send(filename.encode())
+                response=client_socket.recv(MSSGLEN).decode()
+               # print(response)
+                if "file found" in response:
+                    with open(f"download_{filename}","wb")as file:
+                        while True:
+                            data=client_socket.recv(MSSGLEN)
+                            if data==b"EOF":
+                                break
+                            file.write(data)
+                    print(f"File '{filename}' downloaded successfully.")
+                else:
+                    print("file not found on the server")
+            elif choice =='4':
+                filename= input("Enter file name to delete: ")
+                client_socket.send(filename.encode())
+                response = client_socket.recv(MSSGLEN).decode()
+                print(response)
+            elif choice == '5':
                 response = client_socket.recv(MSSGLEN).decode()
                 print(response)
                 print("Exiting.")

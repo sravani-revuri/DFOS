@@ -1,12 +1,17 @@
+
 import socket
 import threading
 import sys
 import csv
-from funtionalities import ls
+from concurrent.futures import ThreadPoolExecutor
+from funtionalities import ls,delete,download
 
 port_no=33000         #port number on server where connection occurs
 MSSGLEN=1024
+MAX_WORKERS = 10  # Define the maximum number of threads in the pool 
 
+# Initialize thread pool
+executor = ThreadPoolExecutor(max_workers=MAX_WORKERS)
 client_threads=[]
 
 def loading_users():
@@ -45,17 +50,23 @@ def handle_client(client_socket,client_addr):
             print(f"Failed authentication for user {resp[0]} from {client_addr}")
             return
         while True:
-            menu = "\nChoose an option:\n1. List files\n2. Quit\n"
+            menu = "\nChoose an option:\n1. List files\n3.Download\n4. Delete file\n5. Quit\n"
             client_socket.send(menu.encode())
 
             choice = client_socket.recv(MSSGLEN).decode().strip()
 
             if choice == '1':
-                files = ls(resp[0])
-                for val in files:
-                    client_socket.send((val).encode())
+                files = ls(resp[0],client_socket)
+            
+            elif choice == '4':
+                filename=client_socket.recv(MSSGLEN).decode().strip()
+                delete(resp[0],filename,client_socket)
 
-            elif choice == '2':
+            elif choice=='3':
+                filename=client_socket.recv(MSSGLEN).decode().strip()
+                download(resp[0],filename,client_socket)
+
+            elif choice == '5':
                 client_socket.send("Goodbye!".encode())
                 break
 
@@ -73,9 +84,8 @@ def main():
     print("Server started listening at {}::{}".format(*server.getsockname()))
 
     while True:
-        client_socket,client_addr=server.accept()
-        thread=threading.Thread(target=handle_client,args=(client_socket,client_addr))
-        thread.start()
+        client_socket, client_addr = server.accept()
+        executor.submit(handle_client, client_socket, client_addr)  # Submit the handling of the client to the thread pool
 
 
 if __name__ == "__main__":
