@@ -30,8 +30,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
                 if response=="finished":
                     break
                 print(response)
-<<<<<<< Updated upstream
-=======
             
             elif choice =='2':
                 filename=input("Enter filename to upload:")
@@ -51,7 +49,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
                 upload_response = client_socket.recv(MSSGLEN).decode()
                 print(upload_response)  # Print confirmation message
 
->>>>>>> Stashed changes
             elif choice=='3':
                 filename=input("Enter file name to download:")
                 client_socket.send(filename.encode())
@@ -69,11 +66,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
                     print(f"File '{filename}' downloaded successfully.")
                 else:
                     print("file not found on the server")
-<<<<<<< Updated upstream
-=======
 
 
->>>>>>> Stashed changes
             elif choice =='4':
                 filename= input("Enter file name to delete: ")
                 client_socket.send(filename.encode())

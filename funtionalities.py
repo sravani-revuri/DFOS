@@ -17,8 +17,6 @@ def ls(username, client_socket):
     except Exception as e:
         client_socket.send(f"Error accessing files: {str(e)}".encode())
 
-<<<<<<< Updated upstream
-=======
 def upld(username,filename,data):
     user_folder=os.path.join("server_storage",username)
     if not os.path.isdir(user_folder):
@@ -31,7 +29,6 @@ def upld(username,filename,data):
         file.write(data)
         return True
     
->>>>>>> Stashed changes
 def delete(username,filename,client_socket):
     user_folder=os.path.join("server_storage",username)
     if not os.path.isdir(user_folder):
@@ -46,10 +43,6 @@ def delete(username,filename,client_socket):
     except Exception as e:
         client_socket.send(f"Error accessing files: {str(e)}".encode())
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 def download(username,filename,client_socket):
     # set  the path to the users folder
    # print("seaarch")
@@ -80,8 +73,4 @@ def download(username,filename,client_socket):
            
 
     except Exception as e:
-<<<<<<< Updated upstream
         client_socket.send(f"Erro during file download :{str(e)}".encode)
-=======
-        client_socket.send(f"Erro during file download :{str(e)}".encode)
->>>>>>> Stashed changes

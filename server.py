@@ -3,14 +3,9 @@ import socket
 import threading
 import sys
 import csv
-<<<<<<< Updated upstream
-from concurrent.futures import ThreadPoolExecutor
-from funtionalities import ls,delete,download
-=======
 import os
 from concurrent.futures import ThreadPoolExecutor
 from funtionalities import ls,delete,upld,download
->>>>>>> Stashed changes
 
 port_no=33000         #port number on server where connection occurs
 MSSGLEN=1024
@@ -58,11 +53,7 @@ def handle_client(client_socket,client_addr):
             print(f"Failed authentication for user {resp[0]} from {client_addr}")
             return
         while True:
-<<<<<<< Updated upstream
-            menu = "\nChoose an option:\n1. List files\n3.Download\n4. Delete file\n5. Quit\n"
-=======
             menu = "\nChoose an option:\n1. List files\n2. Upload file\n3. Download\n4. Delete file\n5. Quit\n"
->>>>>>> Stashed changes
             client_socket.send(menu.encode())
 
             choice = client_socket.recv(MSSGLEN).decode().strip()
@@ -70,11 +61,6 @@ def handle_client(client_socket,client_addr):
             if choice == '1':
                 files = ls(resp[0],client_socket)
             
-<<<<<<< Updated upstream
-            elif choice == '4':
-                filename=client_socket.recv(MSSGLEN).decode().strip()
-                delete(resp[0],filename,client_socket)
-=======
             elif choice == '2':
                 filename=client_socket.recv(MSSGLEN).decode().strip()
                 client_socket.send("filename received".encode())
@@ -91,19 +77,15 @@ def handle_client(client_socket,client_addr):
                 upld(resp[0], filename, file_data)
                 client_socket.send("File uploaded successfully".encode())
 
->>>>>>> Stashed changes
 
             elif choice=='3':
                 filename=client_socket.recv(MSSGLEN).decode().strip()
                 download(resp[0],filename,client_socket)
 
-<<<<<<< Updated upstream
-=======
             elif choice == '4':
                 filename=client_socket.recv(MSSGLEN).decode().strip()
                 delete(resp[0],filename,client_socket)
 
->>>>>>> Stashed changes
             elif choice == '5':
                 client_socket.send("Goodbye!".encode())
                 break
