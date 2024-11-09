@@ -1,4 +1,4 @@
-import socket
+import socket,time
 import os  # listdir(), getcwd(), chdir(), mkdir()
 
 def ls(username, client_socket):
@@ -55,8 +55,11 @@ def download(username,filename,client_socket):
 
             with open(user_file,"rb") as file:
                 while chunk:=file.read(1024):
+                    print(chunk)
                     client_socket.send(chunk)
+                    time.sleep(0.1)
             client_socket.send(b"EOF")
+           
 
     except Exception as e:
         client_socket.send(f"Erro during file download :{str(e)}".encode)

@@ -36,9 +36,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
                 response=client_socket.recv(MSSGLEN).decode()
                # print(response)
                 if "file found" in response:
-                    with open(f"download_{filename}","wb")as file:
+                    with open(f"download_{filename}","wb") as file:
                         while True:
+                            #print("file found")
                             data=client_socket.recv(MSSGLEN)
+                            print(data)
                             if data==b"EOF":
                                 break
                             file.write(data)
