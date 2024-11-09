@@ -1,0 +1,36 @@
+import os
+import mysql.connector
+
+# Path to the folder containing food images
+image_folder = 'C:/Users/HP/Desktop/SEM5/DBMS/Project/static/food'
+
+# Connect to the MySQL database
+connection = mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='Rashmi@123',
+    database='cultural_heritage'
+)
+
+cursor = connection.cursor()
+
+# Get all food items
+cursor.execute("SELECT food_id, food_name FROM famous_food")
+food_items = cursor.fetchall()
+
+# Insert image data for each food item
+for food_id, food_name in food_items:
+    # Look for image files in the folder matching the food name pattern
+    for file in os.listdir(image_folder):
+        if file.startswith(food_name.replace(" ", "_")):
+            # Insert each image for the food item
+            image_filename = file
+            cursor.execute(
+                "INSERT INTO famous_food_images (food_id, Image) VALUES (%s, %s)",
+                (food_id, image_filename)
+            )
+
+# Commit and close the connection
+connection.commit()
+cursor.close()
+connection.close()

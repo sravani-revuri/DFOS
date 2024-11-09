@@ -4,7 +4,7 @@
 # client.py
 import socket
 
-server_address = input("Enter the server IP address: ")
+server_address = '127.0.0.1'#input("Enter the server IP address: ")
 port_no = 33000
 MSSGLEN = 1024
 
@@ -30,6 +30,28 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
                 if response=="finished":
                     break
                 print(response)
+<<<<<<< Updated upstream
+=======
+            
+            elif choice =='2':
+                filename=input("Enter filename to upload:")
+                filepath=input("enter path of file to upload:").strip()
+                client_socket.send(filename.encode())
+                response = client_socket.recv(MSSGLEN).decode()
+                
+                if response == "filename received":
+                    with open(filepath, "rb") as file:
+                        while True:
+                            file_data = file.read(MSSGLEN)
+                            if not file_data:
+                                break
+                            client_socket.send(file_data)
+            
+                client_socket.send("EOF".encode())
+                upload_response = client_socket.recv(MSSGLEN).decode()
+                print(upload_response)  # Print confirmation message
+
+>>>>>>> Stashed changes
             elif choice=='3':
                 filename=input("Enter file name to download:")
                 client_socket.send(filename.encode())
@@ -47,6 +69,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
                     print(f"File '{filename}' downloaded successfully.")
                 else:
                     print("file not found on the server")
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
             elif choice =='4':
                 filename= input("Enter file name to delete: ")
                 client_socket.send(filename.encode())
