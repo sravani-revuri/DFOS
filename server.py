@@ -1,26 +1,26 @@
-
 import socket
 import threading
 import sys
 import csv
-import os
 from concurrent.futures import ThreadPoolExecutor
-from funtionalities import ls,delete,upld,download
+from funtionalities import ls, upld, upldl, dwld, delete, preview
 
-port_no=33000         #port number on server where connection occurs
-MSSGLEN=1024
-MAX_WORKERS = 10  # Define the maximum number of threads in the pool 
+port_no = 33000  # Port number on server where connection occurs
+MSSGLEN = 1024
+MAX_WORKERS = 1  # Define the maximum number of threads in the pool
 
 # Initialize thread pool
 executor = ThreadPoolExecutor(max_workers=MAX_WORKERS)
-client_threads=[]
-client_tracker=[]
+client_threads = []
+client_tracker = set()
+tracker_lock = threading.Lock()  # Lock for accessing client_tracker
+
 
 def loading_users():
     try:
-         users_file = open('id_passwd.txt', 'r')
+        users_file = open('id_passwd.txt', 'r')
     except FileNotFoundError:
-        print("Server is not able to authenticate user (filenotfound)")
+        print("Server is not able to authenticate user (file not found)")
         sys.exit()
     users = {}  # Create an empty dictionary to hold user-password pairs
     csv_file = csv.DictReader(users_file, delimiter=",")
@@ -31,76 +31,104 @@ def loading_users():
 
     return users
 
-def authenticating_user(current_users,name, password):
-    if name==None or password==None:
+
+def authenticating_user(current_users, name, password):
+    if name is None or password is None:
         return False
     if name in current_users and current_users[name] == password:
         return True
     return False
 
 
-def handle_client(client_socket,client_addr):
+def handle_client(client_socket, client_addr):
+    global client_tracker
+
+    username = None  # Track the username of the connected client
     try:
-        resp=client_socket.recv(MSSGLEN).decode().strip().split(':')
-        current_users=loading_users()
-        if authenticating_user(current_users,resp[0],resp[1]):
-            client_socket.send("SUCCESSFULL CONNECTION".encode())
+        resp = client_socket.recv(MSSGLEN).decode().strip().split(':')
+        current_users = loading_users()
+        username = resp[0]
+
+        with tracker_lock:
+            if username in client_tracker:
+                client_socket.send("User already logged in. Multiple sessions not allowed.".encode())
+                print(f"Rejected login for {resp} from {client_addr} - already logged in.")
+                return
+
+        if authenticating_user(current_users, username, resp[1]):
+            client_socket.send("SUCCESSFUL CONNECTION".encode())
+
+            with tracker_lock:
+                client_tracker.add(username)
             client_threads.append(threading.current_thread())
-            client_tracker.append(resp[0])
-            print(f"Authenticated user {resp[0]} from {client_addr}")
+            print(f"Authenticated user {username} from {client_addr}")
         else:
             client_socket.send("AUTHENTICATION FAILED".encode())
-            print(f"Failed authentication for user {resp[0]} from {client_addr}")
+            print(f"Failed authentication for user {username} from {client_addr}")
             return
+
         while True:
-            menu = "\nChoose an option:\n1. List files\n2. Upload file\n3. Download\n4. Delete file\n5. Quit\n"
+            menu = "\nChoose an option:\n1. List files\n2. Upload text file\n3. Large file upload\n4. Download File\n5. Preview File\n6. Delete File\n7.Quit"
             client_socket.send(menu.encode())
 
             choice = client_socket.recv(MSSGLEN).decode().strip()
 
             if choice == '1':
-                files = ls(resp[0],client_socket)
-            
+                ls(username, client_socket)
+
             elif choice == '2':
-                filename=client_socket.recv(MSSGLEN).decode().strip()
+                filename = client_socket.recv(MSSGLEN).decode().strip()
                 client_socket.send("filename received".encode())
-                user_folder = os.path.join("server_storage", resp[0])  # resp[0] assumed to be the username
-                user_file = os.path.join(user_folder, filename)
+                # Send confirmation to upload text in chunks
+                upload_result = upld(username, filename, client_socket)
+                if upload_result == "error":
+                    continue
 
-                file_data =""
-                while True:
-                    chunk = client_socket.recv(MSSGLEN).decode()
-                    if chunk == "EOF":
-                        break  
-                    file_data += chunk  
-
-                upld(resp[0], filename, file_data)
-                client_socket.send("File uploaded successfully".encode())
-
-
-            elif choice=='3':
-                filename=client_socket.recv(MSSGLEN).decode().strip()
-                download(resp[0],filename,client_socket)
+            elif choice == '3':
+                filename = client_socket.recv(MSSGLEN).decode().strip()
+                upload_result = upldl(username, filename, client_socket)
+                if upload_result == "error":
+                    continue  # Skip back
 
             elif choice == '4':
-                filename=client_socket.recv(MSSGLEN).decode().strip()
-                delete(resp[0],filename,client_socket)
+                filename = client_socket.recv(MSSGLEN).decode().strip()
+                download_result = dwld(username, filename, client_socket)
+                if download_result == "error":
+                    continue
 
-            elif choice == '5':
+            elif choice == '5':  # Preview option
+                filename = client_socket.recv(MSSGLEN).decode().strip()
+                preview(username, filename, client_socket)
+                continue
+
+            elif choice == '6':  # Delete file
+                filename = client_socket.recv(MSSGLEN).decode().strip()
+                del_result = delete(username, filename, client_socket)
+                if del_result == "error":
+                    continue
+
+            elif choice == '7':
                 client_socket.send("Goodbye!".encode())
                 break
 
             else:
                 client_socket.send("Invalid option. Try again.".encode())
+    except Exception as e:
+        print(f"Error with client {client_addr}: {e}")
     finally:
+        if username:
+            with tracker_lock:
+                client_tracker.discard(username)  # Remove the user safely
+            print(f"User {username} disconnected.")
         client_socket.close()
 
+
 def main():
-    server=socket.socket(socket.AF_INET,socket.SOCK_STREAM)         #setting up TCP stream
-    
-    #binding server to port and dynamic ip address (based on client i/p)
-    server.bind(('',port_no))     
-    server.listen(2)    #queue  
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # Setting up TCP stream
+
+    # Binding server to port and dynamic IP address (based on client input)
+    server.bind(('', port_no))
+    server.listen(2)  # Queue
     print("Server started listening at {}::{}".format(*server.getsockname()))
 
     while True:

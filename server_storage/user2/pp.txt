@@ -1,0 +1,261 @@
+mysql> CREATE DATABASE HAPPYTAILS;
+Query OK, 1 row affected (0.07 sec)
+
+mysql> USE HAPPYTAILS;
+Database changed
+mysql> CREATE TABLE pets (
+    ->     Pet_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ->     Name VARCHAR(50) NOT NULL,
+    ->     Species VARCHAR(30) NOT NULL,
+    ->     Breed VARCHAR(50),
+    ->     Age INT,
+    ->     Gender ENUM('Male', 'Female', 'Unknown') NOT NULL,
+    ->     Vaccination_Status VARCHAR(100),
+    ->     Intake_Date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ->     Adoption_Status ENUM('Available', 'Pending', 'Not Available') NOT NULL,
+    ->     Description TEXT,
+    ->     Health_Condition VARCHAR(100) NOT NULL DEFAULT 'Good',
+    ->     Last_Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> CREATE TABLE volunteers (
+    ->     Volunteer_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ->     Name VARCHAR(50) NOT NULL,
+    ->     Skills VARCHAR(100),
+    ->     Availability ENUM('Available', 'Not Available') NOT NULL,
+    ->     Contact_Number VARCHAR(15) NOT NULL,
+    ->     Email VARCHAR(100)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> desc pets;
++--------------------+---------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| Field              | Type                                        | Null | Key | Default           | Extra
+                            |
++--------------------+---------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| Pet_ID             | int                                         | NO   | PRI | NULL              | auto_increment                                |
+| Name               | varchar(50)                                 | NO   |     | NULL              |
+                            |
+| Species            | varchar(30)                                 | NO   |     | NULL              |
+                            |
+| Breed              | varchar(50)                                 | YES  |     | NULL              |
+                            |
+| Age                | int                                         | YES  |     | NULL              |
+                            |
+| Gender             | enum('Male','Female','Unknown')             | NO   |     | NULL              |
+                            |
+| Vaccination_Status | varchar(100)                                | YES  |     | NULL              |
+                            |
+| Intake_Date        | datetime                                    | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED                             |
+| Adoption_Status    | enum('Available','Pending','Not Available') | NO   |     | NULL              |
+                            |
+| Description        | text                                        | YES  |     | NULL              |
+                            |
+| Health_Condition   | varchar(100)                                | NO   |     | Good              |
+                            |
+| Last_Updated       | timestamp                                   | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------------+---------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+12 rows in set (0.04 sec)
+
+mysql> desc volunteer;
+ERROR 1146 (42S02): Table 'happytails.volunteer' doesn't exist
+mysql> show tables;
++----------------------+
+| Tables_in_happytails |
++----------------------+
+| pets                 |
+| volunteers           |
++----------------------+
+2 rows in set (0.01 sec)
+
+mysql> desc volunteers;
++----------------+-----------------------------------+------+-----+---------+----------------+
+| Field          | Type                              | Null | Key | Default | Extra          |
++----------------+-----------------------------------+------+-----+---------+----------------+
+| Volunteer_ID   | int                               | NO   | PRI | NULL    | auto_increment |
+| Name           | varchar(50)                       | NO   |     | NULL    |                |
+| Skills         | varchar(100)                      | YES  |     | NULL    |                |
+| Availability   | enum('Available','Not Available') | NO   |     | NULL    |                |
+| Contact_Number | varchar(15)                       | NO   |     | NULL    |                |
+| Email          | varchar(100)                      | YES  |     | NULL    |                |
++----------------+-----------------------------------+------+-----+---------+----------------+
+6 rows in set (0.01 sec)
+
+mysql> show tables;
++----------------------+
+| Tables_in_happytails |
++----------------------+
+| pets                 |
+| volunteers           |
++----------------------+
+2 rows in set (0.01 sec)
+
+mysql> drop happytails;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'happytails' at line 1
+mysql> drop database happytails;
+Query OK, 2 rows affected (0.05 sec)
+
+mysql> CREATE DATABASE HAPPYTAILS;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> USE HAPPYTAILS;
+Database changed
+mysql> CREATE TABLE pets (
+    ->     Pet_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ->     Name VARCHAR(50) NOT NULL,
+    ->     Species VARCHAR(30) NOT NULL,
+    ->     Breed VARCHAR(50),
+    ->     Age INT,
+    ->     Gender ENUM('Male', 'Female', 'Unknown') NOT NULL,
+    ->     Vaccination_Status VARCHAR(100),
+    ->     Intake_Date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ->     Adoption_Status ENUM('Available', 'Pending', 'Not Available') NOT NULL,
+    ->     Health_Condition VARCHAR(100) NOT NULL DEFAULT 'Good',
+    ->     Last_Updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> DESC pets;
++--------------------+---------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| Field              | Type                                        | Null | Key | Default           | Extra                                         |
++--------------------+---------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+| Pet_ID             | int                                         | NO   | PRI | NULL              | auto_increment                                |
+| Name               | varchar(50)                                 | NO   |     | NULL              |                                               |
+| Species            | varchar(30)                                 | NO   |     | NULL              |                                               |
+| Breed              | varchar(50)                                 | YES  |     | NULL              |                                               |
+| Age                | int                                         | YES  |     | NULL              |                                               |
+| Gender             | enum('Male','Female','Unknown')             | NO   |     | NULL              |                                               |
+| Vaccination_Status | varchar(100)                                | YES  |     | NULL              |                                               |
+| Intake_Date        | datetime                                    | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED                             |
+| Adoption_Status    | enum('Available','Pending','Not Available') | NO   |     | NULL              |                                               |
+| Health_Condition   | varchar(100)                                | NO   |     | Good              |                                               |
+| Last_Updated       | timestamp                                   | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------------+---------------------------------------------+------+-----+-------------------+-----------------------------------------------+
+11 rows in set (0.00 sec)
+
+mysql> CREATE TABLE volunteers (
+    ->     Volunteer_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ->     Name VARCHAR(50) NOT NULL,
+    ->     Skill VARCHAR(100),
+    ->     Availability ENUM('Available', 'Not Available') NOT NULL,
+    ->     Contact_Number VARCHAR(15) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> desc volunteers;
++----------------+-----------------------------------+------+-----+---------+----------------+
+| Field          | Type                              | Null | Key | Default | Extra          |
++----------------+-----------------------------------+------+-----+---------+----------------+
+| Volunteer_ID   | int                               | NO   | PRI | NULL    | auto_increment |
+| Name           | varchar(50)                       | NO   |     | NULL    |                |
+| Skill          | varchar(100)                      | YES  |     | NULL    |                |
+| Availability   | enum('Available','Not Available') | NO   |     | NULL    |                |
+| Contact_Number | varchar(15)                       | NO   |     | NULL    |                |
++----------------+-----------------------------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> CREATE TABLE volunteer_schedule (
+    ->     Schedule_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ->     Volunteer_ID INT NOT NULL,
+    ->     Pet_ID INT NOT NULL,
+    ->     Shift_Date DATE NOT NULL,
+    ->     Status ENUM('Active', 'Inactive') NOT NULL,
+    ->     FOREIGN KEY (Volunteer_ID) REFERENCES volunteers(Volunteer_ID),
+    ->     FOREIGN KEY (Pet_ID) REFERENCES pets(Pet_ID)
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> desc volunteer_schedule;
++--------------+---------------------------+------+-----+---------+----------------+
+| Field        | Type                      | Null | Key | Default | Extra          |
++--------------+---------------------------+------+-----+---------+----------------+
+| Schedule_ID  | int                       | NO   | PRI | NULL    | auto_increment |
+| Volunteer_ID | int                       | NO   | MUL | NULL    |                |
+| Pet_ID       | int                       | NO   | MUL | NULL    |                |
+| Shift_Date   | date                      | NO   |     | NULL    |                |
+| Status       | enum('Active','Inactive') | NO   |     | NULL    |                |
++--------------+---------------------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> CREATE TABLE adopter (
+    ->     Adopter_ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ->     FName VARCHAR(10) NOT NULL,
+    ->     LName VARCHAR(10) NOT NULL,
+    ->     Contact_Number VARCHAR(15) NOT NULL,
+    ->     Preference VARCHAR(50) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> desc adopter;
++----------------+-------------+------+-----+---------+----------------+
+| Field          | Type        | Null | Key | Default | Extra          |
++----------------+-------------+------+-----+---------+----------------+
+| Adopter_ID     | int         | NO   | PRI | NULL    | auto_increment |
+| FName          | varchar(10) | NO   |     | NULL    |                |
+| LName          | varchar(10) | NO   |     | NULL    |                |
+| Contact_Number | varchar(15) | NO   |     | NULL    |                |
+| Preference     | varchar(50) | NO   |     | NULL    |                |
++----------------+-------------+------+-----+---------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> CREATE TABLE adopter_application (
+    ->     application_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     pet_id INT,
+    ->     adopter_id INT,
+    ->     submission_date DATE,
+    ->     status VARCHAR(50) DEFAULT 'pending',
+    ->
+    ->     FOREIGN KEY (pet_id) REFERENCES pets(Pet_ID),
+    ->     FOREIGN KEY (adopter_id) REFERENCES adopter(Adopter_ID)
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> desc adopter_application;
++-----------------+-------------+------+-----+---------+----------------+
+| Field           | Type        | Null | Key | Default | Extra          |
++-----------------+-------------+------+-----+---------+----------------+
+| application_id  | int         | NO   | PRI | NULL    | auto_increment |
+| pet_id          | int         | YES  | MUL | NULL    |                |
+| adopter_id      | int         | YES  | MUL | NULL    |                |
+| submission_date | date        | YES  |     | NULL    |                |
+| status          | varchar(50) | YES  |     | pending |                |
++-----------------+-------------+------+-----+---------+----------------+
+5 rows in set (0.01 sec)
+
+mysql> CREATE TABLE adoption_records (
+    ->     record_id INT AUTO_INCREMENT PRIMARY KEY,
+    ->     pet_id INT,
+    ->     adopter_id INT,
+    ->     adoption_date DATE,
+    ->
+    ->     FOREIGN KEY (pet_id) REFERENCES pets(Pet_ID),
+    ->     FOREIGN KEY (adopter_id) REFERENCES adopter(Adopter_ID)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc adoption_records;
++---------------+------+------+-----+---------+----------------+
+| Field         | Type | Null | Key | Default | Extra          |
++---------------+------+------+-----+---------+----------------+
+| record_id     | int  | NO   | PRI | NULL    | auto_increment |
+| pet_id        | int  | YES  | MUL | NULL    |                |
+| adopter_id    | int  | YES  | MUL | NULL    |                |
+| adoption_date | date | YES  |     | NULL    |                |
++---------------+------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+mysql> show tables;
++----------------------+
+| Tables_in_happytails |
++----------------------+
+| adopter              |
+| adopter_application  |
+| adoption_records     |
+| pets                 |
+| volunteer_schedule   |
+| volunteers           |
++----------------------+
+6 rows in set (0.00 sec)
+
+mysql>

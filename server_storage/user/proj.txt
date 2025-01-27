@@ -1,0 +1,510 @@
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.39 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases
+    -> ^C
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.04 sec)
+
+mysql> create database;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+mysql> classL
+    -> ^C
+mysql> create database classL;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| classl             |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> create schema studentdb;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| classl             |
+| information_schema |
+| mysql              |
+| performance_schema |
+| studentdb          |
+| sys                |
++--------------------+
+6 rows in set (0.00 sec)
+
+mysql> use classL;
+Database changed
+mysql> create table faculty(fid int,name varchar(10),salary numeric(6,3) NOT NULL,primary key(fid))
+    -> ^C
+mysql> create table faculty(fid int,name varchar(10),salary numeric(6,3) NOT NULL,primary key(fid));
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> show tables;
++------------------+
+| Tables_in_classl |
++------------------+
+| faculty          |
++------------------+
+1 row in set (0.02 sec)
+
+mysql> create table student(srn int,sname varchar(10),age int,sec char(1),foreign key(fam) references faculty(fid),primary key(srn));
+ERROR 1072 (42000): Key column 'fam' doesn't exist in table
+mysql> create table student(srn int,sname varchar(10),age int,sec char(1),fam int,foreign key(fam) references faculty(fid),primary key(srn));
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> show tables;
++------------------+
+| Tables_in_classl |
++------------------+
+| faculty          |
+| student          |
++------------------+
+2 rows in set (0.00 sec)
+
+mysql> describe faculty;
++--------+--------------+------+-----+---------+-------+
+| Field  | Type         | Null | Key | Default | Extra |
++--------+--------------+------+-----+---------+-------+
+| fid    | int          | NO   | PRI | NULL    |       |
+| name   | varchar(10)  | YES  |     | NULL    |       |
+| salary | decimal(6,3) | NO   |     | NULL    |       |
++--------+--------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> describe student;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| srn   | int         | NO   | PRI | NULL    |       |
+| sname | varchar(10) | YES  |     | NULL    |       |
+| age   | int         | YES  |     | NULL    |       |
+| sec   | char(1)     | YES  |     | NULL    |       |
+| fam   | int         | YES  | MUL | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> create table student1 as select * from student;
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create table student2 like student;
+Query OK, 0 rows affected (0.08 sec)
+describe student1;									//primary and foreign key not copied
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| srn   | int         | NO   |     | NULL    |       |
+| sname | varchar(10) | YES  |     | NULL    |       |
+| age   | int         | YES  |     | NULL    |       |
+| sec   | char(1)     | YES  |     | NULL    |       |
+| fam   | int         | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> describe student2;						//primary and foreign key copied
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| srn   | int         | NO   | PRI | NULL    |       |
+| sname | varchar(10) | YES  |     | NULL    |       |
+| age   | int         | YES  |     | NULL    |       |
+| sec   | char(1)     | YES  |     | NULL    |       |
+| fam   | int         | YES  | MUL | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> show create table student;
++---------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table   | Create Table
+
+                                                       |
++---------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| student | CREATE TABLE `student` (
+  `srn` int NOT NULL,
+  `sname` varchar(10) DEFAULT NULL,
+  `age` int DEFAULT NULL,
+  `sec` char(1) DEFAULT NULL,
+  `fam` int DEFAULT NULL,
+  PRIMARY KEY (`srn`),
+  KEY `fam` (`fam`),
+  CONSTRAINT `student_ibfk_1` FOREIGN KEY (`fam`) REFERENCES `faculty` (`fid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++---------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+//student_ibfk_1 -> first foreign key of student
+//InnoDB -->db engine
+mysql> alter table faculty add femail varchar(15);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe faculty;
++--------+--------------+------+-----+---------+-------+
+| Field  | Type         | Null | Key | Default | Extra |
++--------+--------------+------+-----+---------+-------+
+| fid    | int          | NO   | PRI | NULL    |       |
+| name   | varchar(10)  | YES  |     | NULL    |       |
+| salary | decimal(6,3) | NO   |     | NULL    |       |
+| femail | varchar(15)  | YES  |     | NULL    |       |
++--------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+mysql> alter table faculty modify femail varchar(25);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe faculty;
++--------+--------------+------+-----+---------+-------+
+| Field  | Type         | Null | Key | Default | Extra |
++--------+--------------+------+-----+---------+-------+
+| fid    | int          | NO   | PRI | NULL    |       |
+| name   | varchar(10)  | YES  |     | NULL    |       |
+| salary | decimal(6,3) | NO   |     | NULL    |       |
+| femail | varchar(25)  | YES  |     | NULL    |       |
++--------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+mysql> alter table faculty rename column femail to emailid;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe faculty;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| fid     | int          | NO   | PRI | NULL    |       |
+| name    | varchar(10)  | YES  |     | NULL    |       |
+| salary  | decimal(6,3) | NO   |     | NULL    |       |
+| emailid | varchar(25)  | YES  |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> drop table faculty;
+ERROR 3730 (HY000): Cannot drop table 'faculty' referenced by a foreign key constraint 'student_ibfk_1' on table 'student'.
+mysql> drop table faculty;
+ERROR 3730 (HY000): Cannot drop table 'faculty' referenced by a foreign key constraint 'student_ibfk_1' on table 'student'.
+mysql> rename table faculty to faculty1;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> show create table faculty1;
++----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table    | Create Table
+                                                                                                     |
++----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| faculty1 | CREATE TABLE `faculty1` (
+  `fid` int NOT NULL,
+  `name` varchar(10) DEFAULT NULL,
+  `salary` decimal(6,3) NOT NULL,
+  `emailid` varchar(25) DEFAULT NULL,
+  PRIMARY KEY (`fid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> show create table student;
++---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table   | Create Table
+
+                                                        |
++---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| student | CREATE TABLE `student` (
+  `srn` int NOT NULL,
+  `sname` varchar(10) DEFAULT NULL,
+  `age` int DEFAULT NULL,
+  `sec` char(1) DEFAULT NULL,
+  `fam` int DEFAULT NULL,
+  PRIMARY KEY (`srn`),
+  KEY `fam` (`fam`),
+  CONSTRAINT `student_ibfk_1` FOREIGN KEY (`fam`) REFERENCES `faculty1` (`fid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> drop table student;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> drop table faculty1;
+Query OK, 0 rows affected (0.03 sec)
+
+//alter table student1 add foreign key(fam) references faculty;
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+mysql> create schema company;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show database;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'database' at line 1
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| classl             |
+| company            |
+| information_schema |
+| mysql              |
+| performance_schema |
+| studentdb          |
+| sys                |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> use company
+Database changed
+mysql> use company;
+Database changed
+mysql> describe company;
+ERROR 1146 (42S02): Table 'company.company' doesn't exist
+mysql> create table dept_locations(Dnumber int primary key,Dloc);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+mysql> create table dept_locations(Dnumber int primary key,Dloc varchar(10));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> show database;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'database' at line 1
+mysql> desc dept_locations;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| Dnumber | int         | NO   | PRI | NULL    |       |
+| Dloc    | varchar(10) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> create table deptartment(Dname varchar(10),Dnumber int,Mgr_ssn int,Mgr_start_date date);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> alter table department add primary key(Dnumber);
+ERROR 1146 (42S02): Table 'company.department' doesn't exist
+mysql> alter table deptartment add primary key(Dnumber);
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table deptartment rename to department;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create table employee(fname varchar(10),mname varchar(10),lname varchar(10),ssn int primary key,bdate date,address varchar(10),sex char(1),salary numeric(6,3),super_ssn int,Dno int);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> create table project(pname varchar(10),pnumber int primary key,plocation varchar(10),dnum int);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> alter table employee add foreign key(super_ssn) references employee;
+ERROR 1239 (42000): Incorrect foreign key definition for 'foreign key without name': Key reference and table reference don't match
+mysql> alter table employee add foreign key(super_ssn) references employee(super_ssn);
+ERROR 1822 (HY000): Failed to add the foreign key constraint. Missing index for constraint 'employee_ibfk_1' in the referenced table 'employee'
+mysql> alter table employee add foreign key(super_ssn) references employee(sssn);
+ERROR 3734 (HY000): Failed to add the foreign key constraint. Missing column 'sssn' for constraint 'employee_ibfk_1' in the referenced table 'employee'
+mysql> alter table employee add foreign key(super_ssn) references employee(ssn);
+Query OK, 0 rows affected (0.18 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table department add foreign key(Mgr_ssn) references employee(s
+sn);
+Query OK, 0 rows affected (0.15 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+       ^C
+mysql> describe employee;
++-----------+--------------+------+-----+---------+-------+
+| Field     | Type         | Null | Key | Default | Extra |
++-----------+--------------+------+-----+---------+-------+
+| fname     | varchar(10)  | YES  |     | NULL    |       |
+| mname     | varchar(10)  | YES  |     | NULL    |       |
+| lname     | varchar(10)  | YES  |     | NULL    |       |
+| ssn       | int          | NO   | PRI | NULL    |       |
+| bdate     | date         | YES  |     | NULL    |       |
+| address   | varchar(10)  | YES  |     | NULL    |       |
+| sex       | char(1)      | YES  |     | NULL    |       |
+| salary    | decimal(6,3) | YES  |     | NULL    |       |
+| super_ssn | int          | YES  | MUL | NULL    |       |
+| Dno       | int          | YES  |     | NULL    |       |
++-----------+--------------+------+-----+---------+-------+
+10 rows in set (0.00 sec)
+
+mysql> alter table employee add foreign key(Dno) references department(Dnumber);
+Query OK, 0 rows affected (0.15 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| classl             |
+| company            |
+| information_schema |
+| mysql              |
+| performance_schema |
+| studentdb          |
+| sys                |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> desc department;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| Dname          | varchar(10) | YES  |     | NULL    |       |
+| Dnumber        | int         | NO   | PRI | NULL    |       |
+| Mgr_ssn        | int         | YES  | MUL | NULL    |       |
+| Mgr_start_date | date        | YES  |     | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> desc dept_locations;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| Dnumber | int         | NO   | PRI | NULL    |       |
+| Dloc    | varchar(10) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> alter table dept_locations add foreign key(Dnumber) references department(Dnumber);
+Query OK, 0 rows affected (0.11 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc project;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| pname     | varchar(10) | YES  |     | NULL    |       |
+| pnumber   | int         | NO   | PRI | NULL    |       |
+| plocation | varchar(10) | YES  |     | NULL    |       |
+| dnum      | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> alter table project add foreign key(Dnum) references department(Dnumber);
+Query OK, 0 rows affected (0.13 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe works_on;
+ERROR 1146 (42S02): Table 'company.works_on' doesn't exist
+mysql> create table works_on(essn int,pno int,hours time);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> alter table works_on add foreign key(essn) references employee(ssn);
+Query OK, 0 rows affected (0.14 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table works_on add foreign key(pno) references project(pnumber);
+Query OK, 0 rows affected (0.13 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create table dependent(essn int,dependent_name varchar(10),sex char(1),bdate date,rel
+ationship varchar(10));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> alter table dependent add foreign key(essn) references employee(ssn);
+Query OK, 0 rows affected (0.14 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table dept_locations add primary key(Dnumber);
+ERROR 1068 (42000): Multiple primary key defined
+mysql> alter table project add primary key(pnumber);
+ERROR 1068 (42000): Multiple primary key defined
+mysql> alter table works_on add primary key(essn);
+Query OK, 0 rows affected (0.10 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table works_on add primary key(pno);
+ERROR 1068 (42000): Multiple primary key defined
+mysql> alter table works_on add primary key(essn,pno);
+ERROR 1068 (42000): Multiple primary key defined
+mysql> alter table works_on drop primary key(pno);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(pno)' at line 1
+mysql> alter table works_on drop primary key;
+ERROR 1553 (HY000): Cannot drop index 'PRIMARY': needed in a foreign key constraint
+mysql> alter table dependent drop primary key(essn,deoendent_name);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(essn,deoendent_name)' at line 1
+mysql> alter table dependent add primary key(essn,deoendent_name);
+ERROR 1072 (42000): Key column 'deoendent_name' doesn't exist in table
+mysql> alter table dependent add primary key(essn,dependent_name);
+Query OK, 0 rows affected (0.20 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+====================================================================================================================================================
+mysql> use ok;
+Database changed
+mysql>  create table faculty(fid int,name varchar(10),salary numeric(6,3) NOT NULL,primary key(fid));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql>  create table student(srn int,sname varchar(10),age int,sec char(1),fam int,foreign key(fam) references faculty(fid),primary key(srn));
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> insert into student values(10,'ramu',20,'a',null);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into student values(11,'rahul',20,'a',null);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from student;
++-----+-------+------+------+------+
+| srn | sname | age  | sec  | fam  |
++-----+-------+------+------+------+
+|  10 | ramu  |   20 | a    | NULL |
+|  11 | rahul |   20 | a    | NULL |
++-----+-------+------+------+------+
+2 rows in set (0.00 sec)
+
+mysql> create table student3 like student;
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> select * from student3;
+Empty set (0.00 sec)
+==========================================================
+if faculty is dropped :
+>cant delete|
+>default val
+>delete all students with that teacher
+
+on delete set null
+on delete cascade
+on delete set deafault		//doesn't work in SQL, Oracle supports
+alter table drop foreign key-> error (table can have multiple fk's)
+alter table drop primary key ->(only one exists so okay)
+==============================================
+retrieve first name and last name of all employees
+select ssn,fname from employee
+select ssn,salary from employee
+select frame from employee where something=5
+
+
+retrieve fname and lname for all employees working under the department  '5'
+retrieve fname and ssn of all employees working for research department 
+list the number of male and female employees
+
+========================================================
+
+create user ABC
+select user from mysql.user
+show grants for ABC
+select on table
+grant select on employee to user1(ABC??)
+
+=======================================================
+
