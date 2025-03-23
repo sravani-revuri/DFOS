@@ -8,37 +8,59 @@ This project is a **multi-client file transfer system** implemented using **Pyth
 
 ## 🚀 Features  
 
-1) **User Authentication**: Ensures only registered users can access the system.  
+✅ **User Authentication**: Ensures only registered users can access the system.  
 
-2) **File Operations**: Supports listing, uploading, downloading, previewing, and deleting files.  
+✅ **File Operations**: Supports listing, uploading, downloading, previewing, and deleting files.  
 
-3) **Thread-Safe Multi-Client Support**: Uses a **thread pool** to handle multiple clients efficiently.  
+✅ **Thread-Safe Multi-Client Support**: Uses a **thread pool** to handle multiple clients efficiently.  
 
-4) **Chunked File Transfers**: Supports large file uploads/downloads in **chunks** to handle network constraints.  
+✅ **Chunked File Transfers**: Supports large file uploads/downloads in **chunks** to handle network constraints.  
 
-5) **Session Control**: Prevents **multiple logins** from the same user.  
+✅ **Session Control**: Prevents **multiple logins** from the same user.  
 
 ---
 
-## 🛠 How to Run  
-
-### 1️⃣ Start the Server  
-
-Open a terminal and run:  
+## 🛠 How to Run
+###1️⃣ Running on the Same Machine (Localhost)
+➤ Start the Server
+Open a terminal and run:
 
 ```bash
 python server.py
 ```
-The server will start listening on **port 33000** for incoming connections.  
+The server will start listening on port 33000 for incoming connections.
 
-### 2️⃣ Start the Client  
-
-On a client machine, open a terminal and run:  
+➤ Start the Client
+Open another terminal on the same machine and run:
 
 ```bash
 python client.py
 ```
+The client will prompt for a username and password to authenticate.
+Once authenticated, users can choose various file operations.
 
-To run the server on another system , un-comment  line no 7 from client.py
+###2️⃣ Running on Different Machines (Server-Client Mode)
+➤ Step 1: Start the Server on the Server Machine
+On the server system, open a terminal and run:
+
+```bash
+python server.py
+```
+The server will start listening on port 33000 for incoming connections.
+
+➤ Step 2: Configure the Client
+On the client system, open client.py in a text editor and uncomment line 7:
+
 #server_address = input("enter ip address of serv ")
-and input the ip address of server system
+
+When running the client, enter the IP address of the server machine when prompted.
+
+➤ Step 3: Start the Client
+Now, on the client system, open a terminal and run:
+
+```bash
+python client.py
+```
+Enter the server's IP address when prompted, then proceed with authentication.
+
+
