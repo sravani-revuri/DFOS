@@ -21,7 +21,6 @@ This project is a **multi-client file transfer system** implemented using **Pyth
 ---
 
 ## 🛠 How to Run
-1️⃣ Running on the Same Machine (Localhost)
 ➤ Start the Server
 Open a terminal and run:
 
@@ -39,28 +38,8 @@ python client.py
 The client will prompt for a username and password to authenticate.
 Once authenticated, users can choose various file operations.
 
-2️⃣ Running on Different Machines (Server-Client Mode)
-➤ Step 1: Start the Server on the Server Machine
-On the server system, open a terminal and run:
-
-```bash
-python server.py
-```
-The server will start listening on port 33000 for incoming connections.
-
-➤ Step 2: Configure the Client
-On the client system, open client.py in a text editor and uncomment line 7:
-
-#server_address = input("enter ip address of serv ")
-
-When running the client, enter the IP address of the server machine when prompted.
-
-➤ Step 3: Start the Client
-Now, on the client system, open a terminal and run:
-
-```bash
-python client.py
-```
+To run on different machines, open client.py and uncomment line 7
+run the files with the same commands as mentioned above
 Enter the server's IP address when prompted, then proceed with authentication.
 
 
