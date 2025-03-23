@@ -21,7 +21,7 @@ This project is a **multi-client file transfer system** implemented using **Pyth
 ---
 
 ## 🛠 How to Run
-###1️⃣ Running on the Same Machine (Localhost)
+1️⃣ Running on the Same Machine (Localhost)
 ➤ Start the Server
 Open a terminal and run:
 
@@ -39,7 +39,7 @@ python client.py
 The client will prompt for a username and password to authenticate.
 Once authenticated, users can choose various file operations.
 
-###2️⃣ Running on Different Machines (Server-Client Mode)
+2️⃣ Running on Different Machines (Server-Client Mode)
 ➤ Step 1: Start the Server on the Server Machine
 On the server system, open a terminal and run:
 
