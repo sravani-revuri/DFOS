@@ -22,7 +22,7 @@ This project is a **multi-client file transfer system** implemented using **Pyth
 
 ## 🛠 How to Run
 ➤ **Start the Server** 
-Open a terminal and run:
+ Open a terminal and run:
 
 ```bash
 python server.py
@@ -30,7 +30,7 @@ python server.py
 The server will start listening on port 33000 for incoming connections.
 
 ➤ **Start the Client**
-Open another terminal on the same machine and run:
+ Open another terminal on the same machine and run:
 
 ```bash
 python client.py
