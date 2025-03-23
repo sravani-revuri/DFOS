@@ -38,8 +38,7 @@ python client.py
 The client will prompt for a username and password to authenticate.
 Once authenticated, users can choose various file operations.
 
-To run on different machines, open client.py and uncomment line 7
-run the files with the same commands as mentioned above
-Enter the server's IP address when prompted, then proceed with authentication.
+To run on different machines, open client.py and uncomment line 7,
+run the files with the same commands as mentioned above. Enter the server's IP address when prompted, then proceed with authentication.
 
 
